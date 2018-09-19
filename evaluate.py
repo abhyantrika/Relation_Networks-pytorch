@@ -9,10 +9,11 @@ import cv2,time
 import numpy as np
 from lib.array_tool import tonumpy
 
-def eval(dataloader, resnet, test_num=10000):
+def eval(dataloader, resnet, test_num=1000):
     pred_bboxes, pred_labels, pred_scores = list(), list(), list()
     gt_bboxes, gt_labels, gt_difficults = list(), list(), list()
     for ii, data in enumerate(dataloader):
+        print(ii,' Done')
         (imgs, sizes, gt_bboxes_, gt_labels_, gt_difficults_) = data
 
         nms_scores, sorted_labels, sorted_cls_bboxes = resnet(
@@ -33,7 +34,8 @@ def eval(dataloader, resnet, test_num=10000):
         gt_bboxes += list(gt_bboxes_.numpy())
         gt_labels += list(gt_labels_.numpy())
         gt_difficults += list(gt_difficults_.numpy())
-        if ii == test_num: break
+        if ii >=test_num: 
+            break
 
     result = eval_detection_voc(
         pred_bboxes, pred_labels, pred_scores,
